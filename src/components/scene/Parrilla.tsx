@@ -28,8 +28,56 @@ const CHIMNEY_TOP = 3.7; // above the roof for draft
 
 const PARR_DEPTH = 0.7; // into the room (x)
 const PARR_WIDTH = 1.2; // along the wall (z)
+const THROAT = 0.45; // campana top opening / chimney flue
 const MESADA_DEPTH = 0.6;
 const AISLE = 0.9; // space to stand and cook between the two mesadas
+
+// Brick corbelled campana (hood) that funnels the smoke from the parrilla footprint up
+// to a hollow brick chimney with an open flue and a rain cap, so the smoke actually exits.
+function Campana({ x, z, base, brick }: { x: number; z: number; base: number; brick: Texture }) {
+  const N = 5;
+  const dy = (CAMPANA_TOP - CAMPANA_BOTTOM) / N;
+  const rings = [];
+  for (let i = 0; i < N; i++) {
+    const t = (i + 0.5) / N;
+    const xs = PARR_DEPTH + (THROAT - PARR_DEPTH) * t;
+    const zs = PARR_WIDTH + (THROAT - PARR_WIDTH) * t;
+    const yc = base + CAMPANA_BOTTOM + i * dy + dy / 2;
+    const h = dy + 0.02;
+    rings.push(
+      <group key={i}>
+        <mesh position={[x - xs / 2, yc, z]}><boxGeometry args={[0.08, h, zs]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+        <mesh position={[x + xs / 2, yc, z]}><boxGeometry args={[0.08, h, zs]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+        <mesh position={[x, yc, z - zs / 2]}><boxGeometry args={[xs, h, 0.08]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+        <mesh position={[x, yc, z + zs / 2]}><boxGeometry args={[xs, h, 0.08]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+      </group>,
+    );
+  }
+  const Hc = CHIMNEY_TOP - CAMPANA_TOP;
+  const cyc = base + (CAMPANA_TOP + CHIMNEY_TOP) / 2;
+  const o = 0.25; // half outer size of the chimney
+  return (
+    <group>
+      {rings}
+      {/* hollow chimney tube (open flue) */}
+      <mesh position={[x - o, cyc, z]}><boxGeometry args={[0.08, Hc, 2 * o]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+      <mesh position={[x + o, cyc, z]}><boxGeometry args={[0.08, Hc, 2 * o]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+      <mesh position={[x, cyc, z - o]}><boxGeometry args={[2 * o, Hc, 0.08]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+      <mesh position={[x, cyc, z + o]}><boxGeometry args={[2 * o, Hc, 0.08]} /><meshStandardMaterial map={brick} roughness={0.95} /></mesh>
+      {/* rain cap (sombrerete) on short posts — smoke exits under it */}
+      {[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([sx, sz], i) => (
+        <mesh key={i} position={[x + sx * (o - 0.03), base + CHIMNEY_TOP + 0.12, z + sz * (o - 0.03)]}>
+          <boxGeometry args={[0.05, 0.24, 0.05]} />
+          <meshStandardMaterial color={CONCRETE} roughness={0.9} />
+        </mesh>
+      ))}
+      <mesh position={[x, base + CHIMNEY_TOP + 0.27, z]}>
+        <boxGeometry args={[2 * o + 0.18, 0.06, 2 * o + 0.18]} />
+        <meshStandardMaterial color={CONCRETE} roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
 
 // A counter open underneath: concrete top on brick legs, with an optional brick back
 // panel (so storage opens toward one side only).
@@ -189,19 +237,8 @@ export function Parrilla() {
         <boxGeometry args={[PARR_DEPTH - 0.12, 0.03, PARR_WIDTH - 0.22]} />
         <meshStandardMaterial color={GRILL} metalness={0.5} roughness={0.6} />
       </mesh>
-      {/* campana (hood) */}
-      <mesh
-        position={[parrXc - 0.05, base + (CAMPANA_BOTTOM + CAMPANA_TOP) / 2, parrZc]}
-        rotation={[0, Math.PI / 4, 0]}
-      >
-        <cylinderGeometry args={[0.22, 0.82, CAMPANA_TOP - CAMPANA_BOTTOM, 4]} />
-        <meshStandardMaterial map={tex.campana} roughness={0.95} />
-      </mesh>
-      {/* chimney above the roof */}
-      <mesh position={[parrXc - 0.05, base + (CAMPANA_TOP + CHIMNEY_TOP) / 2, parrZc]}>
-        <boxGeometry args={[0.4, CHIMNEY_TOP - CAMPANA_TOP, 0.4]} />
-        <meshStandardMaterial map={tex.chimney} roughness={0.95} />
-      </mesh>
+      {/* brick corbelled campana + hollow chimney with rain cap */}
+      <Campana x={parrXc} z={parrZc} base={base} brick={tex.body} />
     </group>
   );
 }
