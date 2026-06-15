@@ -2,21 +2,24 @@ import { site } from '@/data/site';
 
 const HEIGHT = 1.5; // meters
 const POST_EVERY = 2.5; // meters
+const WIRE_COUNT = 7; // strands of wire
+const WIRE_BOTTOM = 0.25;
+const WIRE_TOP = 1.45;
 
 type Point = [number, number]; // [x, z]
 
-function Rail({ from, to, y }: { from: Point; to: Point; y: number }) {
+function Wire({ from, to, y }: { from: Point; to: Point; y: number }) {
   const [x1, z1] = from;
   const [x2, z2] = to;
   const cx = (x1 + x2) / 2;
   const cz = (z1 + z2) / 2;
   const len = Math.hypot(x2 - x1, z2 - z1);
   const alongX = Math.abs(x2 - x1) > Math.abs(z2 - z1);
-  const args: [number, number, number] = alongX ? [len, 0.05, 0.05] : [0.05, 0.05, len];
+  const args: [number, number, number] = alongX ? [len, 0.015, 0.015] : [0.015, 0.015, len];
   return (
     <mesh position={[cx, y, cz]}>
       <boxGeometry args={args} />
-      <meshStandardMaterial color="#9a9a9a" />
+      <meshStandardMaterial color="#cfcfcf" metalness={0.4} roughness={0.6} />
     </mesh>
   );
 }
@@ -34,7 +37,7 @@ function Posts({ from, to }: { from: Point; to: Point }) {
     posts.push(
       <mesh key={i} position={[x, HEIGHT / 2, z]}>
         <boxGeometry args={[0.1, HEIGHT, 0.1]} />
-        <meshStandardMaterial color="#6b6b6b" />
+        <meshStandardMaterial color="#6b5638" />
       </mesh>,
     );
   }
@@ -42,21 +45,24 @@ function Posts({ from, to }: { from: Point; to: Point }) {
 }
 
 function Run({ from, to }: { from: Point; to: Point }) {
+  const wires = [];
+  for (let i = 0; i < WIRE_COUNT; i++) {
+    const y = WIRE_BOTTOM + (WIRE_TOP - WIRE_BOTTOM) * (i / (WIRE_COUNT - 1));
+    wires.push(<Wire key={i} from={from} to={to} y={y} />);
+  }
   return (
     <group>
       <Posts from={from} to={to} />
-      <Rail from={from} to={to} y={HEIGHT * 0.4} />
-      <Rail from={from} to={to} y={HEIGHT * 0.85} />
+      {wires}
     </group>
   );
 }
 
-// Perimeter fence on all 4 sides. Lot is centered at the origin:
-// x in [-w, w], z in [-d, d]. Front (gate) is the south edge at z = -d.
+// Perimeter wire fence (7 strands). Lot centered at origin: x in [-w, w], z in [-d, d].
+// The front (south) edge is wood, handled by <FrontWall>, so it is not drawn here.
 export function Fence() {
   const w = site.widthM / 2;
   const d = site.depthM / 2;
-  const g = site.gate.widthM / 2;
   return (
     <group>
       {/* back (north) */}
@@ -65,9 +71,6 @@ export function Fence() {
       <Run from={[-w, -d]} to={[-w, d]} />
       {/* east */}
       <Run from={[w, -d]} to={[w, d]} />
-      {/* front (south), split around the centered gate opening */}
-      <Run from={[-w, -d]} to={[-g, -d]} />
-      <Run from={[g, -d]} to={[w, -d]} />
     </group>
   );
 }

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { site } from '@/data/site';
 import { Ground } from './scene/Ground';
 import { Fence } from './scene/Fence';
+import { FrontWall } from './scene/FrontWall';
 import { Gate } from './scene/Gate';
 import { CompassNorth } from './scene/CompassNorth';
 
@@ -47,12 +48,13 @@ export default function Scene() {
         cellThickness={0.5}
         sectionSize={5}
         sectionThickness={1}
-        cellColor="#b8a878"
-        sectionColor="#8a7a4a"
+        cellColor="#5f7d40"
+        sectionColor="#4a6332"
         fadeDistance={140}
         position={[0, 0.01, 0]}
       />
       <Fence />
+      <FrontWall />
       <Gate />
       <CompassNorth />
       <OrbitControls target={[0, 1, 0]} maxPolarAngle={Math.PI / 2.05} enableDamping />
