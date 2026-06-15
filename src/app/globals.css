@@ -15,11 +15,63 @@ body {
   color: #1a1a1a;
 }
 
-.stage {
-  position: fixed;
-  inset: 0;
+/* ---- app shell ---- */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 16px;
+  height: 52px;
+  background: #ffffff;
+  border-bottom: 1px solid #d8dde3;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  z-index: 5;
+}
+
+.tabs-brand {
+  font-weight: 700;
+  font-size: 14px;
+  color: #2a2a2a;
+}
+
+.tabs-list {
+  display: flex;
+  gap: 4px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.tab:hover {
+  background: #f0f2f5;
+}
+
+.tab.active {
+  background: #2a6b4f;
+  color: #fff;
+}
+
+.view {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* ---- 3D overlays ---- */
 .info-panel {
   position: absolute;
   top: 16px;
@@ -29,6 +81,7 @@ body {
   padding: 14px 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   max-width: 280px;
+  z-index: 2;
 }
 
 .info-panel h1 {
@@ -60,4 +113,54 @@ body {
   padding: 24px;
   text-align: center;
   color: #555;
+}
+
+/* ---- planos ---- */
+.planos {
+  padding: 20px;
+  background: #eef1f4;
+  min-height: 100%;
+}
+
+.planos-head h1 {
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.planos-head p {
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: #555;
+}
+
+.planos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.plan-sheet {
+  margin: 0;
+  background: #fff;
+  border: 1px solid #d8dde3;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.plan-title {
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2a2a2a;
+  border-bottom: 1px solid #e5e8ec;
+  background: #f7f9fb;
+}
+
+.plan-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background: #fff;
 }
