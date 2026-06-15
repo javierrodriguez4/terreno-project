@@ -146,6 +146,14 @@ function PlanPlantaQuincho() {
   const parrY1 = y1 - 0.1 * s - parrW;
   const cols = [0, 1, 2, 3].map((i) => x0 + wt / 2 + (W * s - wt) * (i / 3));
 
+  // bathroom on the right wall (east), toward the front (bottom)
+  const b = q.bathroom;
+  const bathD = b.depthM * s;
+  const bathL = b.lengthM * s;
+  const bathX = x1 - wt - bathD;
+  const bathY1 = y1 - 0.1 * s;
+  const bathY0 = bathY1 - bathL;
+
   return (
     <svg viewBox="0 0 520 260" width="100%" style={{ maxWidth: 640 }}>
       {/* slab outline */}
@@ -169,6 +177,11 @@ function PlanPlantaQuincho() {
       {/* pileta */}
       <rect x={x0 + wt + 0.12 * s} y={y0 + wt + 0.2 * s} width={0.36 * s} height={0.36 * s} fill="#c7c2b8" stroke={INK} strokeWidth={0.8} />
       <Label x={x0 + wt + 0.3 * s + 30} y={y0 + wt + 0.4 * s} text="pileta" size={8} />
+      {/* bathroom + depósito (brick) */}
+      <rect x={bathX} y={bathY0} width={bathD} height={bathL} fill={BRICK_FILL} stroke={INK} strokeWidth={1} />
+      <Label x={bathX + bathD / 2} y={(bathY0 + bathY1) / 2} text="BAÑO" size={8} />
+      <rect x={bathX} y={y0 + wt} width={bathD} height={bathY0 - (y0 + wt)} fill="#e7ddcf" stroke={INK} strokeWidth={1} />
+      <Label x={bathX + bathD / 2} y={(y0 + wt + bathY0) / 2} text="DEPÓSITO" size={8} />
       {/* dims */}
       <DimH x1={x0} x2={x1} y={y0 - 12} label={`${W} m`} />
       <DimV y1={y0} y2={y1} x={x0 - 12} label={`${D} m`} />

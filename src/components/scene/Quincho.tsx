@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { site } from '@/data/site';
 import { Parrilla } from './Parrilla';
+import { Bathroom } from './Bathroom';
 import { makeBrickTexture, repeated } from './textures';
 
 const FLOOR_Y = 0.12; // slab top, meters
@@ -153,6 +154,8 @@ export function Quincho() {
 
       {/* masonry parrilla + concrete mesada against the left wall */}
       <Parrilla />
+      {/* small bathroom against the right wall, toward the front */}
+      <Bathroom />
     </group>
   );
 }

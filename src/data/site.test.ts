@@ -20,7 +20,14 @@ describe('site config', () => {
       widthM: 13,
       gate: { widthM: 99, side: 'front' },
       northHeadingDeg: 0,
-      quincho: { widthM: 11, depthM: 5, fenceGapM: 1, frontHeightM: 3, backHeightM: 2.3 },
+      quincho: {
+        widthM: 11,
+        depthM: 5,
+        fenceGapM: 1,
+        frontHeightM: 3,
+        backHeightM: 2.3,
+        bathroom: { depthM: 1.4, lengthM: 1.5, doorWidthM: 0.75 },
+      },
     };
     expect(validateSite(bad)).not.toEqual([]);
   });

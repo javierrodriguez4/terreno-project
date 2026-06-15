@@ -12,6 +12,14 @@ export interface QuinchoConfig {
   frontHeightM: number;
   /** Height at the back (north), in meters — lower, so the roof drains backward. */
   backHeightM: number;
+  /** Small bathroom against the right wall (opposite the parrilla), toward the front. */
+  bathroom: {
+    /** Depth from the right wall into the room (x), in meters. */
+    depthM: number;
+    /** Length along the wall (z), in meters. */
+    lengthM: number;
+    doorWidthM: number;
+  };
 }
 
 export interface SiteConfig {
@@ -44,6 +52,7 @@ export const site: SiteConfig = {
     fenceGapM: 1,
     frontHeightM: 3.0,
     backHeightM: 2.3,
+    bathroom: { depthM: 1.4, lengthM: 1.2, doorWidthM: 0.75 },
   },
 };
 
