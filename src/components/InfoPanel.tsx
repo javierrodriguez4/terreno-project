@@ -1,4 +1,4 @@
-import { site, areaM2 } from '@/data/site';
+import { site, areaM2, quinchoAreaM2 } from '@/data/site';
 
 export function InfoPanel() {
   return (
@@ -16,6 +16,10 @@ export function InfoPanel() {
         </li>
         <li>
           Port&oacute;n doble hoja: <strong>{site.gate.widthM} m</strong> (frente/sur)
+        </li>
+        <li>
+          Quincho (fondo): <strong>{site.quincho.widthM}&times;{site.quincho.depthM} m</strong> ={' '}
+          <strong>{quinchoAreaM2()} m&sup2;</strong>
         </li>
       </ul>
       <p className="hint">Arrastr&aacute; para girar &middot; rueda para zoom</p>
