@@ -10,6 +10,7 @@ import { FrontWall } from './scene/FrontWall';
 import { Gate } from './scene/Gate';
 import { Palms } from './scene/Palms';
 import { Quincho } from './scene/Quincho';
+import { Lapachos } from './scene/Lapachos';
 import { CompassNorth } from './scene/CompassNorth';
 
 function hasWebGL(): boolean {
@@ -60,6 +61,7 @@ export default function Scene() {
       <Gate />
       <Palms />
       <Quincho />
+      <Lapachos />
       <CompassNorth />
       <OrbitControls target={[0, 1, 0]} maxPolarAngle={Math.PI / 2.05} enableDamping />
     </Canvas>
