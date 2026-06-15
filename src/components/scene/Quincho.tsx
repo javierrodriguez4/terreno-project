@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { site } from '@/data/site';
 import { Parrilla } from './Parrilla';
 import { Bathroom } from './Bathroom';
+import { Table } from './Table';
 import { BoxWallWithWindows } from './walls';
 import { makeBrickTexture, repeated } from './textures';
 
@@ -94,11 +95,11 @@ export function Quincho() {
   // Side walls are extruded (UV in meters); the back wall (with windows) builds its own.
   const brickSide = useMemo(() => repeated(brickBase, 1 / TILE, 1 / TILE), [brickBase]);
 
-  // light fixtures hanging under the roof
+  // light fixtures hanging over the table (centered, length along x)
   const lampSpots: [number, number][] = [
-    [hw - 0.8, zFront + 0.9],
-    [0.2, zMid],
-    [-1.8, zBack - 1.1],
+    [-0.85, zMid],
+    [0, zMid],
+    [0.85, zMid],
   ];
 
   // Corrugated chapa roof: a plane with sine ribs running down-slope so water drains.
@@ -193,7 +194,10 @@ export function Quincho() {
       {/* small bathroom against the right wall, toward the front */}
       <Bathroom />
 
-      {/* hanging light fixtures */}
+      {/* big wooden table for 10 in the middle */}
+      <Table position={[0, 0, zMid]} />
+
+      {/* hanging light fixtures over the table */}
       {lampSpots.map(([lx, lz], i) => (
         <group key={`lamp${i}`} position={[lx, 0, lz]}>
           <mesh position={[0, 2.3, 0]}>
