@@ -1,9 +1,13 @@
-import { site } from '@/data/site';
+'use client';
 
-// Argentine standard masonry parrilla + concrete mesada with a small sink, against the
-// left wall (viewing from the front). Everything in unrendered concrete; metal grill
-// and tap. Dimensions follow common Argentine standards (boca ~0.70 m, counter ~0.90 m,
-// campana ~0.25 m above the boca, chimney above the roof).
+import { useMemo } from 'react';
+import { site } from '@/data/site';
+import { makeBrickTexture, repeated } from './textures';
+
+// Argentine standard masonry parrilla (exposed brick) + concrete mesada with a small
+// sink, against the left wall (viewing from the front). Parrilla sits toward the front;
+// the mesada continues toward the back. Standards: boca ~0.70 m, counter ~0.90 m,
+// campana ~0.25 m above the boca, chimney above the roof.
 
 const FLOOR_Y = 0.12;
 const WALL_T = 0.2;
@@ -34,22 +38,34 @@ export function Parrilla() {
   const backInner = zBack - WALL_T;
   const base = FLOOR_Y;
 
-  // parrilla in the back corner
-  const parrZc = backInner - PARR_WIDTH / 2;
+  // parrilla toward the FRONT; mesada continues toward the BACK
+  const parrZc = zFront + 0.1 + PARR_WIDTH / 2;
   const parrXc = wallInner - PARR_DEPTH / 2;
   const frontX = wallInner - PARR_DEPTH; // front face of the parrilla
 
-  // mesada from the front toward the parrilla
-  const mesZStart = zFront + 0.1;
-  const mesZEnd = backInner - PARR_WIDTH;
+  const mesZStart = zFront + 0.1 + PARR_WIDTH;
+  const mesZEnd = backInner;
   const mesLen = mesZEnd - mesZStart;
   const mesZc = (mesZStart + mesZEnd) / 2;
   const mesXc = wallInner - MESADA_DEPTH / 2;
-  const sinkZ = mesZStart + 0.35;
+  const sinkZ = mesZEnd - 0.45;
+
+  // exposed-brick textures for the parrilla (mesada stays concrete)
+  const brickBase = useMemo(makeBrickTexture, []);
+  const tex = useMemo(
+    () => ({
+      body: repeated(brickBase, 1.2, 0.9),
+      jamb: repeated(brickBase, 0.7, 1),
+      lintel: repeated(brickBase, 1.2, 0.3),
+      campana: repeated(brickBase, 1, 0.6),
+      chimney: repeated(brickBase, 0.4, 1),
+    }),
+    [brickBase],
+  );
 
   return (
     <group>
-      {/* ---- mesada ---- */}
+      {/* ---- mesada (concrete) ---- */}
       <mesh position={[mesXc, base + COUNTER_H / 2, mesZc]}>
         <boxGeometry args={[MESADA_DEPTH, COUNTER_H, mesLen]} />
         <meshStandardMaterial color={CONCRETE} roughness={0.95} />
@@ -72,11 +88,11 @@ export function Parrilla() {
         <meshStandardMaterial color={METAL} metalness={0.6} roughness={0.4} />
       </mesh>
 
-      {/* ---- parrilla ---- */}
+      {/* ---- parrilla (exposed brick) ---- */}
       {/* base (leñero) */}
       <mesh position={[parrXc, base + COUNTER_H / 2, parrZc]}>
         <boxGeometry args={[PARR_DEPTH, COUNTER_H, PARR_WIDTH]} />
-        <meshStandardMaterial color={CONCRETE} roughness={0.95} />
+        <meshStandardMaterial map={tex.body} roughness={0.95} />
       </mesh>
       {/* side jambs framing the boca */}
       {[-1, 1].map((s) => (
@@ -85,13 +101,13 @@ export function Parrilla() {
           position={[parrXc, base + (COUNTER_H + CAMPANA_BOTTOM) / 2, parrZc + s * (PARR_WIDTH / 2 - 0.075)]}
         >
           <boxGeometry args={[PARR_DEPTH, CAMPANA_BOTTOM - COUNTER_H, 0.15]} />
-          <meshStandardMaterial color={CONCRETE} roughness={0.95} />
+          <meshStandardMaterial map={tex.jamb} roughness={0.95} />
         </mesh>
       ))}
       {/* front lintel above the boca */}
       <mesh position={[frontX + 0.06, base + (BOCA_TOP + CAMPANA_BOTTOM) / 2, parrZc]}>
         <boxGeometry args={[0.12, CAMPANA_BOTTOM - BOCA_TOP, PARR_WIDTH]} />
-        <meshStandardMaterial color={CONCRETE} roughness={0.95} />
+        <meshStandardMaterial map={tex.lintel} roughness={0.95} />
       </mesh>
       {/* grill grate */}
       <mesh position={[parrXc, base + GRILL_H, parrZc]}>
@@ -104,12 +120,12 @@ export function Parrilla() {
         rotation={[0, Math.PI / 4, 0]}
       >
         <cylinderGeometry args={[0.22, 0.82, CAMPANA_TOP - CAMPANA_BOTTOM, 4]} />
-        <meshStandardMaterial color={CONCRETE} roughness={0.95} />
+        <meshStandardMaterial map={tex.campana} roughness={0.95} />
       </mesh>
       {/* chimney above the roof */}
       <mesh position={[parrXc - 0.05, base + (CAMPANA_TOP + CHIMNEY_TOP) / 2, parrZc]}>
         <boxGeometry args={[0.4, CHIMNEY_TOP - CAMPANA_TOP, 0.4]} />
-        <meshStandardMaterial color={CONCRETE} roughness={0.95} />
+        <meshStandardMaterial map={tex.chimney} roughness={0.95} />
       </mesh>
     </group>
   );
