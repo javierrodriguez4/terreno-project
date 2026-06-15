@@ -7,11 +7,18 @@ import { Gate } from './Gate';
 import { Palms } from './Palms';
 import { Quincho } from './Quincho';
 import { Lapachos } from './Lapachos';
+import { Car } from './Car';
 import { CompassNorth } from './CompassNorth';
 
 // The shared 3D world: lights, ground and every object. Reused by the exterior and
 // interior views — only the camera and controls differ between them.
 export function SceneContent() {
+  // park the car between the first two lapachos on the right side
+  const q = site.quincho;
+  const treeStartZ = site.depthM / 2 - q.fenceGapM - q.depthM - 3;
+  const carZ = treeStartZ - 3;
+  const carX = -(site.widthM / 2 - 0.5) + 1.0;
+
   return (
     <>
       <color attach="background" args={['#dfe7ef']} />
@@ -35,6 +42,7 @@ export function SceneContent() {
       <Palms />
       <Quincho />
       <Lapachos />
+      <Car position={[carX, 0, carZ]} />
       <CompassNorth />
     </>
   );
