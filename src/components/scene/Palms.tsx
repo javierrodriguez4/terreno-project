@@ -1,38 +1,71 @@
+import type { ReactElement } from 'react';
 import { site } from '@/data/site';
 
-const TRUNK_H = 3; // meters
+const TRUNK_H = 4.2; // meters
+const TRUNK_SEGS = 9; // stacked segments give a ringed palm-trunk look
+const FROND_COUNT = 13;
 const OFFSET = 0.5; // meters in from the front corner post, and behind the boards
 
-function Frond({ angle, droop, length }: { angle: number; droop: number; length: number }) {
-  return (
-    <group rotation={[0, angle, 0]}>
-      <mesh position={[length / 2, 0, 0]} rotation={[0, 0, droop]}>
-        <boxGeometry args={[length, 0.05, 0.28]} />
-        <meshStandardMaterial color="#3f7d3a" />
-      </mesh>
-    </group>
-  );
+const LEAF = '#3f7d3a';
+const LEAF_DARK = '#356b31';
+const TRUNK = '#8a6b43';
+
+// An arching, drooping palm frond built from a few segments along a curve.
+function Frond({ angle, tip }: { angle: number; tip: boolean }) {
+  const segs = [
+    { len: 0.85, tilt: 0.1, w: 0.26 },
+    { len: 0.75, tilt: -0.4, w: 0.2 },
+    { len: 0.6, tilt: -0.75, w: 0.13 },
+  ];
+  let x = 0;
+  let y = 0;
+  let acc = 0;
+  const meshes: ReactElement[] = [];
+  segs.forEach((s, i) => {
+    acc += s.tilt;
+    const cx = x + (Math.cos(acc) * s.len) / 2;
+    const cy = y + (Math.sin(acc) * s.len) / 2;
+    meshes.push(
+      <mesh key={i} position={[cx, cy, 0]} rotation={[0, 0, acc]}>
+        <boxGeometry args={[s.len, 0.04, s.w]} />
+        <meshStandardMaterial color={tip ? LEAF_DARK : LEAF} />
+      </mesh>,
+    );
+    x += Math.cos(acc) * s.len;
+    y += Math.sin(acc) * s.len;
+  });
+  return <group rotation={[0, angle, 0]}>{meshes}</group>;
 }
 
 function Palm({ position }: { position: [number, number, number] }) {
-  const fronds = [];
-  const n = 9;
-  for (let i = 0; i < n; i++) {
-    // alternate droop and length a little so the crown looks natural
-    const droop = i % 2 === 0 ? -0.35 : -0.5;
-    const length = i % 2 === 0 ? 1.7 : 1.4;
-    fronds.push(<Frond key={i} angle={(i / n) * Math.PI * 2} droop={droop} length={length} />);
+  // ringed, slightly tapered trunk
+  const trunk = [];
+  const segH = TRUNK_H / TRUNK_SEGS;
+  for (let i = 0; i < TRUNK_SEGS; i++) {
+    const t = i / (TRUNK_SEGS - 1);
+    const r = 0.19 - t * 0.08;
+    const ring = i % 2 === 0 ? 1.08 : 1.0;
+    trunk.push(
+      <mesh key={i} position={[0, segH * (i + 0.5), 0]}>
+        <cylinderGeometry args={[r * 0.95, r * ring, segH * 1.02, 8]} />
+        <meshStandardMaterial color={TRUNK} />
+      </mesh>,
+    );
   }
+
+  const fronds = [];
+  for (let i = 0; i < FROND_COUNT; i++) {
+    fronds.push(<Frond key={i} angle={(i / FROND_COUNT) * Math.PI * 2} tip={i % 2 === 0} />);
+  }
+
   return (
     <group position={position}>
-      <mesh position={[0, TRUNK_H / 2, 0]}>
-        <cylinderGeometry args={[0.13, 0.2, TRUNK_H, 8]} />
-        <meshStandardMaterial color="#8a6b43" />
-      </mesh>
+      {trunk}
       <group position={[0, TRUNK_H, 0]}>
         {fronds}
-        <mesh>
-          <sphereGeometry args={[0.18, 8, 8]} />
+        {/* crown base / fruit cluster */}
+        <mesh position={[0, -0.1, 0]}>
+          <sphereGeometry args={[0.16, 8, 8]} />
           <meshStandardMaterial color="#5b4a2f" />
         </mesh>
       </group>

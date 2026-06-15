@@ -1,10 +1,10 @@
 import { site } from '@/data/site';
 
-const HEIGHT = 1.2; // gate height, meters
-const RAIL_COUNT = 4; // horizontal rails per leaf
-const MEMBER = 0.06; // wood member thickness
-const RAIL_BOTTOM = 0.15;
-const RAIL_TOP = 1.05;
+const HEIGHT = 1.5; // gate height, meters (matches the fence)
+const RAIL_COUNT = 5; // horizontal rails per leaf
+const MEMBER = 0.1; // wood member thickness (thicker boards)
+const RAIL_BOTTOM = 0.2;
+const RAIL_TOP = 1.35;
 const WOOD = '#7a4a22';
 
 // One leaf of a farm gate (tranquera): two vertical stiles, horizontal rails, and a
@@ -48,14 +48,17 @@ function Leaf({ x0, x1, flip }: { x0: number; x1: number; flip: boolean }) {
   );
 }
 
-// Double-leaf farm gate (tranquera) centered on the front (south) edge.
+const CENTER_GAP = 0.05; // visible split where the two leaves meet
+
+// Double-leaf farm gate (tranquera) centered on the front (south) edge. Two leaves,
+// each hinged on its outer post, that part at the middle.
 export function Gate() {
   const d = site.depthM / 2;
   const g = site.gate.widthM / 2;
   return (
     <group position={[0, 0, -d]}>
-      <Leaf x0={-g} x1={0} flip={false} />
-      <Leaf x0={0} x1={g} flip={true} />
+      <Leaf x0={-g} x1={-CENTER_GAP} flip={false} />
+      <Leaf x0={CENTER_GAP} x1={g} flip={true} />
     </group>
   );
 }
