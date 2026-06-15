@@ -18,6 +18,7 @@ const SLAB = '#bdb8af';
 const COL_C = '#a9a39a';
 const ROOF = '#9aa0a6';
 const GUTTER = '#b8bcc0';
+const PINE = '#c9a86a';
 
 // Trapezoidal side wall: tall at the front, low at the back, following the roof slope.
 function SideWall({
@@ -72,6 +73,12 @@ export function Quincho() {
 
   const roofAngle = Math.atan2(frontH - backH, q.depthM);
   const roofY = FLOOR_Y + (frontH + backH) / 2 + ROOF_T / 2;
+
+  // pine roof structure: cabios down the slope, clavadores across (chapa screws to these)
+  const nCab = Math.max(2, Math.round(q.widthM / 0.9));
+  const cabiosX = Array.from({ length: nCab + 1 }, (_, i) => -q.widthM / 2 + q.widthM * (i / nCab));
+  const nCla = Math.max(2, Math.round(q.depthM / 0.8));
+  const clavadoresZ = Array.from({ length: nCla + 1 }, (_, i) => -q.depthM / 2 + q.depthM * (i / nCla));
 
   // Low (back) roof edge — where the gutter hangs.
   const roofLen = q.depthM + 2 * OH;
@@ -133,11 +140,26 @@ export function Quincho() {
         </mesh>
       ))}
 
-      {/* single-slope corrugated chapa roof */}
+      {/* single-slope corrugated chapa roof with real pine structure underneath */}
       <group position={[0, roofY, zMid]} rotation={[roofAngle, 0, 0]}>
+        {/* chapa */}
         <mesh geometry={roofGeo} rotation={[-Math.PI / 2, 0, 0]}>
           <meshStandardMaterial color={ROOF} metalness={0.5} roughness={0.5} side={THREE.DoubleSide} />
         </mesh>
+        {/* clavadores (alfajías) — across the width, just under the chapa */}
+        {clavadoresZ.map((cz, i) => (
+          <mesh key={`cl${i}`} position={[0, -0.06, cz]}>
+            <boxGeometry args={[q.widthM + 2 * OH, 0.04, 0.06]} />
+            <meshStandardMaterial color={PINE} roughness={0.85} />
+          </mesh>
+        ))}
+        {/* cabios (tirantes) — down the slope, under the clavadores */}
+        {cabiosX.map((cxp, i) => (
+          <mesh key={`ca${i}`} position={[cxp, -0.12, 0]}>
+            <boxGeometry args={[0.06, 0.1, q.depthM + 2 * OH]} />
+            <meshStandardMaterial color={PINE} roughness={0.85} />
+          </mesh>
+        ))}
       </group>
 
       {/* canaleta along the low (back) edge, draining to downspouts at both ends */}
