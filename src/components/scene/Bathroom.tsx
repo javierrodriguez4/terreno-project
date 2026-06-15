@@ -124,6 +124,26 @@ export function Bathroom() {
         <boxGeometry args={[0.14, 0.025, 0.025]} />
         <meshStandardMaterial color={METAL} metalness={0.6} roughness={0.4} />
       </mesh>
+
+      {/* ---- heladera en el depósito (estándar 0.65 x 0.68 x 1.75) ---- */}
+      <mesh position={[rightInner + 0.39, FLOOR_Y + 0.875, backInner - 0.4]}>
+        <boxGeometry args={[0.65, 1.75, 0.68]} />
+        <meshStandardMaterial color="#e9e9e6" metalness={0.1} roughness={0.5} />
+      </mesh>
+      {/* freezer/fridge door division on the front (+x) face */}
+      <mesh position={[rightInner + 0.39 + 0.33, FLOOR_Y + 1.24, backInner - 0.4]}>
+        <boxGeometry args={[0.02, 0.025, 0.64]} />
+        <meshStandardMaterial color="#b8b8b4" />
+      </mesh>
+      {/* handles */}
+      <mesh position={[rightInner + 0.39 + 0.34, FLOOR_Y + 1.5, backInner - 0.4 - 0.22]}>
+        <boxGeometry args={[0.03, 0.38, 0.03]} />
+        <meshStandardMaterial color={METAL} metalness={0.5} roughness={0.4} />
+      </mesh>
+      <mesh position={[rightInner + 0.39 + 0.34, FLOOR_Y + 0.7, backInner - 0.4 - 0.22]}>
+        <boxGeometry args={[0.03, 0.55, 0.03]} />
+        <meshStandardMaterial color={METAL} metalness={0.5} roughness={0.4} />
+      </mesh>
     </group>
   );
 }
