@@ -67,8 +67,12 @@ export function Quincho() {
   const roofAngle = Math.atan2(frontH - backH, q.depthM);
   const roofY = FLOOR_Y + (frontH + backH) / 2 + ROOF_T / 2;
 
+  // Keep the left side (+x, viewing from the front) at fenceGap from the fence and let
+  // the whole quincho sit offset toward that side, so the extra room is on the right.
+  const centerX = site.widthM / 2 - q.fenceGapM - hw;
+
   return (
-    <group>
+    <group position={[centerX, 0, 0]}>
       {/* concrete slab */}
       <mesh position={[0, FLOOR_Y / 2, zMid]}>
         <boxGeometry args={[q.widthM, FLOOR_Y, q.depthM]} />

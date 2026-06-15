@@ -39,8 +39,8 @@ export const site: SiteConfig = {
   gate: { widthM: 4, side: 'front' },
   northHeadingDeg: 0,
   quincho: {
-    widthM: 11,
-    depthM: 5,
+    widthM: 10,
+    depthM: 4,
     fenceGapM: 1,
     frontHeightM: 3.0,
     backHeightM: 2.3,
