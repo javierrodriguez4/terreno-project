@@ -170,24 +170,28 @@ function PlanPlantaQuincho() {
       ))}
       {/* parrilla (brick) */}
       <rect x={x0 + wt} y={parrY1} width={parrD} height={parrW} fill={BRICK_FILL} stroke={INK} strokeWidth={1} />
-      <Label x={x0 + wt + parrD + 26} y={parrY1 + parrW / 2} text="PARRILLA" size={9} />
+      <Label x={x0 + wt + parrD + 34} y={parrY1 + parrW / 2} text="PARRILLA 0.70×1.20" size={8} />
       {/* mesada (concrete) */}
       <rect x={x0 + wt} y={y0 + wt} width={mesD} height={parrY1 - (y0 + wt) - 4} fill="#dedad2" stroke={INK} strokeWidth={1} />
-      <Label x={x0 + wt + mesD + 24} y={(y0 + wt + parrY1) / 2} text="MESADA" size={9} />
+      <Label x={x0 + wt + mesD + 26} y={(y0 + wt + parrY1) / 2 - 6} text="MESADA 0.60" size={8} />
+      {/* desayunador island */}
+      <rect x={x0 + wt + mesD + 0.9 * s} y={y0 + wt} width={mesD} height={parrY1 - (y0 + wt) - 4} fill="#dedad2" stroke={INK} strokeWidth={1} />
+      <Label x={x0 + wt + mesD + 0.9 * s + mesD / 2} y={(y0 + wt + parrY1) / 2 + 30} text="DESAYUNADOR" size={7} />
       {/* pileta */}
       <rect x={x0 + wt + 0.12 * s} y={y0 + wt + 0.2 * s} width={0.36 * s} height={0.36 * s} fill="#c7c2b8" stroke={INK} strokeWidth={0.8} />
-      <Label x={x0 + wt + 0.3 * s + 30} y={y0 + wt + 0.4 * s} text="pileta" size={8} />
       {/* bathroom + depósito (brick) */}
       <rect x={bathX} y={bathY0} width={bathD} height={bathL} fill={BRICK_FILL} stroke={INK} strokeWidth={1} />
       <Label x={bathX + bathD / 2} y={(bathY0 + bathY1) / 2} text="BAÑO" size={8} />
+      <Label x={bathX + bathD / 2} y={(bathY0 + bathY1) / 2 + 12} text="1.40×1.20" size={7} />
       <rect x={bathX} y={y0 + wt} width={bathD} height={bathY0 - (y0 + wt)} fill="#e7ddcf" stroke={INK} strokeWidth={1} />
       <Label x={bathX + bathD / 2} y={(y0 + wt + bathY0) / 2} text="DEPÓSITO" size={8} />
       {/* dims */}
-      <DimH x1={x0} x2={x1} y={y0 - 12} label={`${W} m`} />
-      <DimV y1={y0} y2={y1} x={x0 - 12} label={`${D} m`} />
+      <DimH x1={x0} x2={x1} y={y0 - 12} label={`${W}.00`} />
+      <DimV y1={y0} y2={y1} x={x0 - 12} label={`${D}.00`} />
       <DimV y1={parrY1} y2={parrY1 + parrW} x={x1 + 14} label="1.20" right />
+      <DimH x1={x0} x2={x0 + wt} y={y1 + 30} label="0.20" below />
       <North x={x1 + 30} y={y0 + 14} />
-      <Label x={(x0 + x1) / 2} y={y1 + 18} text="frente abierto (galería)" size={9} />
+      <Label x={(x0 + x1) / 2} y={y1 + 18} text="frente abierto (galería) · 2 columnas + viga" size={8} />
     </svg>
   );
 }
@@ -334,11 +338,30 @@ export function PlanosView() {
   return (
     <div className="planos">
       <header className="planos-head">
-        <h1>Planos del proyecto — Quincho, Sauce (Corrientes)</h1>
-        <p>
-          Lote {site.depthM}×{site.widthM} m ({areaM2()} m²) · Quincho {site.quincho.widthM}×
-          {site.quincho.depthM} m ({quinchoAreaM2()} m²). Generados del modelo: se actualizan solos.
-        </p>
+        <h1>Planos del proyecto — Quincho con parrilla</h1>
+        <div className="rotulo">
+          <div>
+            <span className="rotulo-k">Obra</span>Quincho, parrilla y depósito
+          </div>
+          <div>
+            <span className="rotulo-k">Ubicación</span>Calle Alberdi, Sauce, Corrientes
+          </div>
+          <div>
+            <span className="rotulo-k">Propietario</span>Javier Rodríguez
+          </div>
+          <div>
+            <span className="rotulo-k">Fecha</span>15/06/2026
+          </div>
+          <div>
+            <span className="rotulo-k">Lote</span>
+            {site.depthM}×{site.widthM} m · {areaM2()} m²
+          </div>
+          <div>
+            <span className="rotulo-k">Quincho</span>
+            {site.quincho.widthM}×{site.quincho.depthM} m · {quinchoAreaM2()} m²
+          </div>
+        </div>
+        <p>Medidas en metros · planos generados del modelo (se actualizan al cambiarlo).</p>
       </header>
       <div className="planos-grid">
         <Sheet title="1 · Implantación">

@@ -12,7 +12,7 @@ import { CompassNorth } from './CompassNorth';
 
 // The shared 3D world: lights, ground and every object. Reused by the exterior and
 // interior views — only the camera and controls differ between them.
-export function SceneContent() {
+export function SceneContent({ showCompass = true }: { showCompass?: boolean }) {
   // park the car between the first two lapachos on the right side
   const q = site.quincho;
   const treeStartZ = site.depthM / 2 - q.fenceGapM - q.depthM - 3;
@@ -43,7 +43,7 @@ export function SceneContent() {
       <Quincho />
       <Lapachos />
       <Car position={[carX, 0, carZ]} />
-      <CompassNorth />
+      {showCompass && <CompassNorth />}
     </>
   );
 }

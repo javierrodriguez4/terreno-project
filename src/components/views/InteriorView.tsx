@@ -21,6 +21,7 @@ export function InteriorView() {
       fov={75}
       minDistance={0.4}
       maxDistance={4}
+      showCompass={false}
     />
   );
 }

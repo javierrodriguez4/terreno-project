@@ -164,8 +164,6 @@ export function Parrilla() {
       body: repeated(brickBase, 1.2, 0.9),
       jamb: repeated(brickBase, 0.7, 1),
       lintel: repeated(brickBase, 1.2, 0.3),
-      campana: repeated(brickBase, 1, 0.6),
-      chimney: repeated(brickBase, 0.4, 1),
     }),
     [brickBase],
   );

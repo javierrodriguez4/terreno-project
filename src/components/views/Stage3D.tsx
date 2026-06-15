@@ -25,11 +25,19 @@ interface Stage3DProps {
   fov?: number;
   minDistance?: number;
   maxDistance?: number;
+  showCompass?: boolean;
 }
 
 // Reusable 3D stage: a Canvas with the shared scene and orbit controls. Each view
 // configures its own camera position, target and zoom limits.
-export function Stage3D({ cameraPosition, target, fov = 50, minDistance, maxDistance }: Stage3DProps) {
+export function Stage3D({
+  cameraPosition,
+  target,
+  fov = 50,
+  minDistance,
+  maxDistance,
+  showCompass = true,
+}: Stage3DProps) {
   const [webgl, setWebgl] = useState<boolean | null>(null);
   useEffect(() => {
     setWebgl(hasWebGL());
@@ -45,7 +53,7 @@ export function Stage3D({ cameraPosition, target, fov = 50, minDistance, maxDist
 
   return (
     <Canvas camera={{ position: cameraPosition, fov }} style={{ width: '100%', height: '100%' }}>
-      <SceneContent />
+      <SceneContent showCompass={showCompass} />
       <OrbitControls
         target={target}
         maxPolarAngle={Math.PI / 2.05}

@@ -23,6 +23,7 @@ export function ViewTabs({ active, onChange }: { active: ViewKey; onChange: (k: 
           </button>
         ))}
       </div>
+      <span className="tabs-owner">Javier Rodríguez</span>
     </nav>
   );
 }
