@@ -42,7 +42,7 @@ export function Lapachos() {
   const x = -(site.widthM / 2 - FENCE_GAP);
   const d = site.depthM / 2;
   const quinchoFrontZ = d - site.quincho.fenceGapM - site.quincho.depthM;
-  const startZ = quinchoFrontZ - 1; // first tree just in front of the quincho
+  const startZ = quinchoFrontZ - 3; // first tree clears the quincho (canopy doesn't touch)
 
   const trees = [];
   for (let i = 0; i < COUNT; i++) {
