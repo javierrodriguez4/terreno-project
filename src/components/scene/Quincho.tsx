@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import { site } from '@/data/site';
+import { Parrilla } from './Parrilla';
 
 const FLOOR_Y = 0.12; // slab top, meters
 const WALL_T = 0.2;
@@ -203,6 +204,9 @@ export function Quincho() {
           <meshStandardMaterial color={GUTTER} metalness={0.4} roughness={0.6} />
         </mesh>
       ))}
+
+      {/* masonry parrilla + concrete mesada against the left wall */}
+      <Parrilla />
     </group>
   );
 }
