@@ -15,6 +15,8 @@ const QWALL_T = 0.2;
 const T = 0.12; // brick partition thickness
 const DOOR_H = 2.0;
 const DOOR_W = 0.75;
+const WHITE = '#f1f0ea'; // porcelain
+const METAL = '#c2c6ca';
 
 export function Bathroom() {
   const q = site.quincho;
@@ -86,6 +88,34 @@ export function Bathroom() {
       {seg(z0, banoDoorZ0, 's1')}
       {seg(banoDoorZ1, depDoorZ0, 's2')}
       {seg(depDoorZ1, backInner, 's3')}
+
+      {/* ---- bathroom fixtures ---- */}
+      {/* inodoro: tank against the back partition, bowl + seat in front */}
+      <mesh position={[rightInner + 0.4, FLOOR_Y + 0.6, zPart - 0.13]}>
+        <boxGeometry args={[0.36, 0.4, 0.16]} />
+        <meshStandardMaterial color={WHITE} />
+      </mesh>
+      <mesh position={[rightInner + 0.4, FLOOR_Y + 0.2, zPart - 0.46]}>
+        <boxGeometry args={[0.36, 0.4, 0.5]} />
+        <meshStandardMaterial color={WHITE} />
+      </mesh>
+      <mesh position={[rightInner + 0.4, FLOOR_Y + 0.42, zPart - 0.46]}>
+        <boxGeometry args={[0.38, 0.06, 0.52]} />
+        <meshStandardMaterial color={WHITE} />
+      </mesh>
+      {/* lavamanos against the right wall, toward the front, with a cold tap */}
+      <mesh position={[rightInner + 0.27, FLOOR_Y + 0.85, z0 + 0.28]}>
+        <boxGeometry args={[0.42, 0.12, 0.34]} />
+        <meshStandardMaterial color={WHITE} />
+      </mesh>
+      <mesh position={[rightInner + 0.15, FLOOR_Y + 0.97, z0 + 0.28]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.2, 8]} />
+        <meshStandardMaterial color={METAL} metalness={0.6} roughness={0.4} />
+      </mesh>
+      <mesh position={[rightInner + 0.23, FLOOR_Y + 1.06, z0 + 0.28]}>
+        <boxGeometry args={[0.14, 0.025, 0.025]} />
+        <meshStandardMaterial color={METAL} metalness={0.6} roughness={0.4} />
+      </mesh>
     </group>
   );
 }
