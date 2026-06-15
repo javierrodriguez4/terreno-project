@@ -69,6 +69,11 @@ function OpenCounter({
           <meshStandardMaterial map={legTex} roughness={0.95} />
         </mesh>
       ))}
+      {/* concrete shelf for storage */}
+      <mesh position={[xc, FLOOR_Y + 0.42, zc]}>
+        <boxGeometry args={[depthX - 0.06, 0.05, lenZ - 0.28]} />
+        <meshStandardMaterial color={CONCRETE} roughness={0.95} />
+      </mesh>
       {/* optional brick back panel (closes the far side) */}
       {backSign !== undefined && (
         <mesh position={[xc + backSign * (depthX / 2 - 0.03), FLOOR_Y + legH / 2, zc]}>
@@ -158,6 +163,11 @@ export function Parrilla() {
       <mesh position={[parrXc, base + COUNTER_H - 0.05, parrZc]}>
         <boxGeometry args={[PARR_DEPTH, 0.1, PARR_WIDTH]} />
         <meshStandardMaterial map={tex.body} roughness={0.95} />
+      </mesh>
+      {/* leñero shelf for stacking firewood */}
+      <mesh position={[parrXc, base + 0.4, parrZc]}>
+        <boxGeometry args={[PARR_DEPTH - 0.06, 0.05, PARR_WIDTH - 0.22]} />
+        <meshStandardMaterial color={CONCRETE} roughness={0.95} />
       </mesh>
       {/* side jambs framing the boca */}
       {[-1, 1].map((s) => (

@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { site } from '@/data/site';
 import { makeBrickTexture, repeated } from './textures';
+import { BoxWallWithWindows } from './walls';
 
 // Bathroom + depósito in the front-right corner (opposite the parrilla). Exposed-brick
 // partition walls that share the quincho's right wall and back wall and rise to meet the
@@ -71,11 +72,18 @@ export function Bathroom() {
 
   return (
     <group>
-      {/* front wall (closes the corner at the front) */}
-      <mesh position={[xcWall, FLOOR_Y + roofH(z0) / 2, z0]}>
-        <boxGeometry args={[b.depthM, roofH(z0), T]} />
-        <meshStandardMaterial map={texWall} roughness={0.95} />
-      </mesh>
+      {/* front wall with a high ventiluz */}
+      <BoxWallWithWindows
+        cx={xcWall}
+        cz={z0}
+        floorY={FLOOR_Y}
+        axis="x"
+        length={b.depthM}
+        height={roofH(z0)}
+        thickness={T}
+        brickBase={brickBase}
+        windows={[{ u: 0, w: 0.6, sill: 1.65, h: 0.4 }]}
+      />
       {/* partition between baño and depósito */}
       <mesh position={[xcWall, FLOOR_Y + roofH(zPart) / 2, zPart]}>
         <boxGeometry args={[b.depthM, roofH(zPart), T]} />

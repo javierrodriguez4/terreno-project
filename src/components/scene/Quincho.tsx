@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { site } from '@/data/site';
 import { Parrilla } from './Parrilla';
 import { Bathroom } from './Bathroom';
+import { BoxWallWithWindows } from './walls';
 import { makeBrickTexture, repeated } from './textures';
 
 const FLOOR_Y = 0.12; // slab top, meters
@@ -90,12 +91,15 @@ export function Quincho() {
   const centerX = site.widthM / 2 - q.fenceGapM - hw;
 
   const brickBase = useMemo(makeBrickTexture, []);
-  // Back wall is a box (UV 0..1 per face); side walls are extruded (UV in meters).
-  const brickBack = useMemo(
-    () => repeated(brickBase, q.widthM / TILE, backH / TILE),
-    [brickBase, q.widthM, backH],
-  );
+  // Side walls are extruded (UV in meters); the back wall (with windows) builds its own.
   const brickSide = useMemo(() => repeated(brickBase, 1 / TILE, 1 / TILE), [brickBase]);
+
+  // light fixtures hanging under the roof
+  const lampSpots: [number, number][] = [
+    [hw - 0.8, zFront + 0.9],
+    [0.2, zMid],
+    [-1.8, zBack - 1.1],
+  ];
 
   // Corrugated chapa roof: a plane with sine ribs running down-slope so water drains.
   const roofGeo = useMemo(() => {
@@ -122,11 +126,21 @@ export function Quincho() {
         <meshStandardMaterial color={SLAB} />
       </mesh>
 
-      {/* back wall (north, lower) — exposed brick */}
-      <mesh position={[0, FLOOR_Y + backH / 2, zBack - WALL_T / 2]}>
-        <boxGeometry args={[q.widthM, backH, WALL_T]} />
-        <meshStandardMaterial map={brickBack} roughness={0.9} />
-      </mesh>
+      {/* back wall (north, lower) — exposed brick with windows (galería + depósito) */}
+      <BoxWallWithWindows
+        cx={0}
+        cz={zBack - WALL_T / 2}
+        floorY={FLOOR_Y}
+        axis="x"
+        length={q.widthM}
+        height={backH}
+        thickness={WALL_T}
+        brickBase={brickBase}
+        windows={[
+          { u: 0.6, w: 1.4, sill: 1.0, h: 0.9 },
+          { u: -hw + WALL_T + q.bathroom.depthM / 2, w: 0.7, sill: 1.3, h: 0.55 },
+        ]}
+      />
 
       {/* side walls (trapezoidal) — exposed brick */}
       <SideWall x={-hw + WALL_T} zFront={zFront} qD={q.depthM} frontH={frontH} backH={backH} map={brickSide} />
@@ -178,6 +192,25 @@ export function Quincho() {
       <Parrilla />
       {/* small bathroom against the right wall, toward the front */}
       <Bathroom />
+
+      {/* hanging light fixtures */}
+      {lampSpots.map(([lx, lz], i) => (
+        <group key={`lamp${i}`} position={[lx, 0, lz]}>
+          <mesh position={[0, 2.3, 0]}>
+            <cylinderGeometry args={[0.008, 0.008, 0.32, 6]} />
+            <meshStandardMaterial color="#333" />
+          </mesh>
+          <mesh position={[0, 2.06, 0]}>
+            <coneGeometry args={[0.13, 0.14, 14]} />
+            <meshStandardMaterial color="#2a2a2a" side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, 1.99, 0]}>
+            <sphereGeometry args={[0.05, 10, 10]} />
+            <meshStandardMaterial color="#fff3d0" emissive="#ffdf9e" emissiveIntensity={1.4} />
+          </mesh>
+          <pointLight position={[0, 1.95, 0]} intensity={4} distance={6} decay={2} color="#ffe6b0" />
+        </group>
+      ))}
     </group>
   );
 }
