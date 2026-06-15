@@ -144,7 +144,7 @@ function PlanPlantaQuincho() {
   const parrD = 0.7 * s; // into the room
   const mesD = 0.6 * s;
   const parrY1 = y1 - 0.1 * s - parrW;
-  const cols = [0, 1, 2, 3].map((i) => x0 + wt / 2 + (W * s - wt) * (i / 3));
+  const cols = [1, 2].map((i) => x0 + W * s * (i / 3));
 
   // bathroom on the right wall (east), toward the front (bottom)
   const b = q.bathroom;
@@ -251,23 +251,28 @@ function VistaFrontal() {
   const x0 = ox;
   const x1 = ox + W * s;
   const yTop = groundY - fH * s;
-  const cols = [0, 1, 2, 3].map((i) => x0 + 0.1 * s + (W * s - 0.2 * s) * (i / 3));
+  const cols = [1, 2].map((i) => x0 + W * s * (i / 3));
 
   return (
     <svg viewBox="0 0 520 240" width="100%" style={{ maxWidth: 640 }}>
       <line x1={20} y1={groundY} x2={500} y2={groundY} stroke={INK} strokeWidth={1.2} />
-      {/* roof fascia */}
-      <rect x={x0 - 0.4 * s} y={yTop - 8} width={W * s + 0.8 * s} height={10} fill={ROOF_FILL} stroke={INK} strokeWidth={1} />
-      {/* columns */}
+      {/* roof overhang line */}
+      <line x1={x0 - 0.4 * s} y1={yTop - 12} x2={x1 + 0.4 * s} y2={yTop - 12} stroke={INK} strokeWidth={1} />
+      {/* side walls at the ends (brick) */}
+      <rect x={x0} y={yTop} width={0.2 * s} height={fH * s} fill={BRICK_FILL} stroke={INK} strokeWidth={1} />
+      <rect x={x1 - 0.2 * s} y={yTop} width={0.2 * s} height={fH * s} fill={BRICK_FILL} stroke={INK} strokeWidth={1} />
+      {/* wooden front beam on columns + walls */}
+      <rect x={x0} y={yTop - 4} width={W * s} height={0.18 * s} fill="#c9a86a" stroke={INK} strokeWidth={1} />
+      {/* middle columns */}
       {cols.map((cx, i) => (
-        <rect key={i} x={cx} y={yTop + 2} width={0.2 * s} height={fH * s - 2} fill="#cfcabf" stroke={INK} strokeWidth={1} />
+        <rect key={i} x={cx} y={yTop + 0.18 * s} width={0.2 * s} height={fH * s - 0.18 * s} fill="#cfcabf" stroke={INK} strokeWidth={1} />
       ))}
       {/* chimney behind */}
       <rect x={x0 + 0.5 * s} y={groundY - 3.7 * s} width={0.4 * s} height={3.7 * s - fH * s} fill={BRICK_FILL} stroke={INK} strokeWidth={1} strokeDasharray="3 2" />
       {/* dims */}
       <DimH x1={x0} x2={x1} y={groundY + 16} label={`${W} m`} below />
       <DimV y1={yTop} y2={groundY} x={x0 - 14} label={`${fH} m`} />
-      <Label x={(x0 + x1) / 2} y={yTop - 14} text="frente abierto — 4 columnas" size={9} />
+      <Label x={(x0 + x1) / 2} y={yTop - 18} text="frente: viga de madera sobre 2 columnas + paredes" size={9} />
     </svg>
   );
 }

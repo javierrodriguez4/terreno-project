@@ -68,10 +68,9 @@ export function Quincho() {
   const frontH = q.frontHeightM;
   const backH = q.backHeightM;
 
-  const columnsX = [];
-  for (let i = 0; i < 4; i++) {
-    columnsX.push(-hw + q.widthM * (i / 3));
-  }
+  // Only the two middle columns are free-standing; the front corners are carried by the
+  // side walls, so the end "columns" live inside the walls and don't protrude.
+  const columnsX = [-q.widthM / 6, q.widthM / 6];
 
   const roofAngle = Math.atan2(frontH - backH, q.depthM);
   const roofY = FLOOR_Y + (frontH + backH) / 2 + ROOF_T / 2;
@@ -147,13 +146,20 @@ export function Quincho() {
       <SideWall x={-hw + WALL_T} zFront={zFront} qD={q.depthM} frontH={frontH} backH={backH} map={brickSide} />
       <SideWall x={hw} zFront={zFront} qD={q.depthM} frontH={frontH} backH={backH} map={brickSide} />
 
-      {/* front columns (open side) */}
+      {/* front columns (open side) — only the two middle ones */}
       {columnsX.map((x, i) => (
         <mesh key={i} position={[x, FLOOR_Y + frontH / 2, zFront]}>
           <boxGeometry args={[COL, frontH, COL]} />
           <meshStandardMaterial color={COL_C} />
         </mesh>
       ))}
+
+      {/* wooden front beam (viga) carrying the cabios on the open side: rests on the two
+          columns and is cemented into the side walls at the ends */}
+      <mesh position={[0, FLOOR_Y + frontH - 0.1, zFront]}>
+        <boxGeometry args={[q.widthM, 0.2, 0.15]} />
+        <meshStandardMaterial color="#b8965a" roughness={0.85} />
+      </mesh>
 
       {/* single-slope corrugated chapa roof with real pine structure underneath */}
       <group position={[0, roofY, zMid]} rotation={[roofAngle, 0, 0]}>
