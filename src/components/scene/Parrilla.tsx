@@ -146,9 +146,17 @@ export function Parrilla() {
       />
 
       {/* ---- parrilla (exposed brick) ---- */}
-      {/* base (leñero) */}
-      <mesh position={[parrXc, base + COUNTER_H / 2, parrZc]}>
-        <boxGeometry args={[PARR_DEPTH, COUNTER_H, PARR_WIDTH]} />
+      {/* leñero: open underneath (like the mesada) to store cut firewood. Side legs
+          carry the hearth slab; the front and middle stay open. */}
+      {[-1, 1].map((s) => (
+        <mesh key={`leg${s}`} position={[parrXc, base + COUNTER_H / 2, parrZc + s * (PARR_WIDTH / 2 - 0.08)]}>
+          <boxGeometry args={[PARR_DEPTH, COUNTER_H, 0.16]} />
+          <meshStandardMaterial map={tex.body} roughness={0.95} />
+        </mesh>
+      ))}
+      {/* hearth slab (firebox floor, on top of the legs) */}
+      <mesh position={[parrXc, base + COUNTER_H - 0.05, parrZc]}>
+        <boxGeometry args={[PARR_DEPTH, 0.1, PARR_WIDTH]} />
         <meshStandardMaterial map={tex.body} roughness={0.95} />
       </mesh>
       {/* side jambs framing the boca */}
