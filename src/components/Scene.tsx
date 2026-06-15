@@ -8,6 +8,7 @@ import { Ground } from './scene/Ground';
 import { Fence } from './scene/Fence';
 import { FrontWall } from './scene/FrontWall';
 import { Gate } from './scene/Gate';
+import { Palms } from './scene/Palms';
 import { CompassNorth } from './scene/CompassNorth';
 
 function hasWebGL(): boolean {
@@ -56,6 +57,7 @@ export default function Scene() {
       <Fence />
       <FrontWall />
       <Gate />
+      <Palms />
       <CompassNorth />
       <OrbitControls target={[0, 1, 0]} maxPolarAngle={Math.PI / 2.05} enableDamping />
     </Canvas>
