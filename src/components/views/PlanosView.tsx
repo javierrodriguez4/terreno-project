@@ -100,9 +100,9 @@ function PlanImplantacion() {
       {/* gate gap on the front (bottom) */}
       <line x1={sx(2)} y1={oy + D * s} x2={sx(-2)} y2={oy + D * s} stroke="#fff" strokeWidth={3} />
       <Label x={sx(0)} y={oy + D * s + 14} text="portón" size={9} />
-      {/* quincho */}
-      <rect x={sx(leftX)} y={sy(qBack)} width={(leftX - rightX) * s} height={q.depthM * s} fill={WALL_FILL} stroke={INK} strokeWidth={1.2} />
-      <Label x={(sx(leftX) + sx(rightX)) / 2} y={(sy(qBack) + sy(qFront)) / 2 + 3} text="QUINCHO" size={9} />
+      {/* quincho (against the fondo) */}
+      <rect x={sx(leftX)} y={sy(dd(qBack))} width={(leftX - rightX) * s} height={q.depthM * s} fill={WALL_FILL} stroke={INK} strokeWidth={1.2} />
+      <Label x={(sx(leftX) + sx(rightX)) / 2} y={(sy(dd(qBack)) + sy(dd(qFront))) / 2 + 3} text="QUINCHO" size={9} />
       {/* trees + palms */}
       {trees.map((t, i) => (
         <circle key={i} cx={t.x} cy={t.y} r={7} fill="#cfe0bf" stroke="#6f8f4a" />
@@ -110,12 +110,10 @@ function PlanImplantacion() {
       {palms.map((p, i) => (
         <circle key={i} cx={p.x} cy={p.y} r={6} fill="#d8e7c8" stroke="#6f8f4a" />
       ))}
-      <Label x={sx(-(W / 2 - 0.5)) - 2} y={sy(dd(3))} text="" />
       {/* dims */}
       <DimV y1={oy} y2={oy + D * s} x={ox - 14} label={`${D} m`} />
       <DimH x1={ox} x2={ox + W * s} y={oy - 12} label={`${W} m`} />
       <North x={ox + W * s + 22} y={oy + 30} />
-      <Label x={ox + W * s - 6} y={sy(dd(0))} text="" />
       <text x={sx(-(W / 2 - 0.5))} y={sy(dd(-9))} fill={INK} fontSize="8" textAnchor="middle" fontFamily={SANS} transform={`rotate(-90 ${sx(-(W / 2 - 0.5))} ${sy(dd(-9))})`}>
         4 lapachos
       </text>
