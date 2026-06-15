@@ -4,9 +4,9 @@ const HEIGHT = 1.5; // post height, meters
 const POST = 0.12; // post side, meters
 const BOARD_H = 0.15; // each board height
 const BOARD_T = 0.04; // board thickness (depth)
-const BOARD_GAP = 0.03; // gap between boards
-const BOARD_BOTTOM = 0.1;
-const BOARD_TOP = 1.4;
+const BOARD_COUNT = 6; // number of horizontal boards
+const BOARD_BOTTOM = 0.2; // center of the lowest board
+const BOARD_TOP = 1.35; // center of the highest board
 
 const WOOD = '#8a5a2b';
 const POST_WOOD = '#6b4423';
@@ -24,11 +24,9 @@ function Post({ x }: { x: number }) {
 function BoardWall({ fromX, toX }: { fromX: number; toX: number }) {
   const len = Math.abs(toX - fromX);
   const cx = (fromX + toX) / 2;
-  const step = BOARD_H + BOARD_GAP;
-  const count = Math.floor((BOARD_TOP - BOARD_BOTTOM) / step) + 1;
   const boards = [];
-  for (let i = 0; i < count; i++) {
-    const y = BOARD_BOTTOM + i * step + BOARD_H / 2;
+  for (let i = 0; i < BOARD_COUNT; i++) {
+    const y = BOARD_BOTTOM + (BOARD_TOP - BOARD_BOTTOM) * (i / (BOARD_COUNT - 1));
     boards.push(
       <mesh key={i} position={[cx, y, 0]}>
         <boxGeometry args={[len, BOARD_H, BOARD_T]} />
